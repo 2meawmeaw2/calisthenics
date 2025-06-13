@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Outfit, Rajdhani, JetBrains_Mono } from "next/font/google";
+import { Outfit, Rajdhani } from "next/font/google";
 import localFont from "next/font/local";
 
 const myFont = localFont({
@@ -10,13 +10,13 @@ const myFont = localFont({
   weight: "100 900",
 });
 
-export const outfit = Outfit({
+const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-outfit",
 });
 
-export const rajdhani = Rajdhani({
+const rajdhani = Rajdhani({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
