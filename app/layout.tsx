@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+"use client";
 import "./globals.css";
 import { Outfit, Rajdhani } from "next/font/google";
 import localFont from "next/font/local";
@@ -23,11 +23,6 @@ const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
 });
 
-export const metadata: Metadata = {
-  title: "Steady core",
-  description: "calisthenics landing page",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,8 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={myFont.className}>
       <body
-        className={`bg-background  ${myFont.className} ${rajdhani.variable} ${outfit.variable} antialiased`}
+        className={`bg-background ${myFont.className} ${rajdhani.variable} ${outfit.variable} antialiased`}
       >
+        {/* Sticky background */}
+
         {children}
       </body>
     </html>

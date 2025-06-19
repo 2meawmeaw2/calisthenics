@@ -135,14 +135,14 @@ export default function Intro() {
       <motion.section
         style={{ opacity: op, y: y }}
         ref={ref}
-        className="w-full h-[150vh] py-3  "
+        className="w-full h-[150vh] py-3 mb-[10rem] relative  "
       >
         <div className="w-full sticky top-0 h-screen flex flex-col justify-center items-center ">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, boxShadow: "none" }}
             transition={{ duration: 2 }}
-            className="p-10 w-full flex flex-col justify-center items-center h-[20%] md:h-[30%] bg-background shadow-2xs shadow-highlight "
+            className="p-10 w-full flex flex-col justify-center items-center h-[20%] md:h-[30%]  shadow-2xs shadow-highlight "
           >
             <h1 className="text-highlight  text-center font-black text-5xl lg:text-6xl italic py-2 ">
               Workouts

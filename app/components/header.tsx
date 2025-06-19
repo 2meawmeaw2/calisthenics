@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <nav className="h-[5rem] w-full bg-foreground sticky top-0 z-[100] flex justify-between items-center px-[5%] md:px-[10%] backdrop-blur-md border-b border-gray-800">
+    <nav className="h-[5rem] w-full  sticky top-0 z-[100] flex justify-between items-center px-[5%] md:px-[10%] backdrop-blur-md border-b border-gray-800">
       <div className="relative h-[3.5rem] w-[4rem] md:h-[4.5rem] md:w-[4.8rem]">
         <Image src="/dark-nb.svg" alt="Logo" fill className="object-contain" />
       </div>
