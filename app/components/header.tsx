@@ -1,10 +1,23 @@
 // components/header.jsx
 "use client";
 import Image from "next/image";
+import { motion, backOut, easeInOut } from "framer-motion";
 
 export default function Header() {
   return (
-    <nav className="h-[5rem] w-full  sticky top-0 z-[100] flex justify-between items-center px-[5%] md:px-[10%] backdrop-blur-md border-b border-gray-800">
+    <motion.nav
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: [0, 0.5, 1],
+      }}
+      transition={{
+        times: [0, 0.5, 1],
+        duration: 2,
+        delay: 1,
+        ease: [backOut, easeInOut],
+      }}
+      className="h-[5rem] w-full  sticky top-0 z-[100] flex justify-between items-center px-[5%] md:px-[10%] backdrop-blur-md border-b border-gray-800"
+    >
       <div className="relative h-[3.5rem] w-[4rem] md:h-[4.5rem] md:w-[4.8rem]">
         <Image src="/dark-nb.svg" alt="Logo" fill className="object-contain" />
       </div>
@@ -19,6 +32,6 @@ export default function Header() {
           About
         </button>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
