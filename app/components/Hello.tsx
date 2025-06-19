@@ -86,7 +86,7 @@ export default function Hero() {
   });
 
   const opacity = useTransform(scrollYProgress, [1, 0.8], [1, 0]);
-  const opacity2 = useTransform(scrollYProgress, [1, 0.6], [1, 0]);
+  const opacity2 = useTransform(scrollYProgress, [1, 0.4], [1, 0]);
   /*       */
 
   const color = useMotionValue(COLORS_TOP[0]);

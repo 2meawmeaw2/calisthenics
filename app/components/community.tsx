@@ -1,5 +1,5 @@
 "use client";
-import { motion, easeInOut } from "motion/react";
+import { motion, easeInOut, backInOut } from "motion/react";
 
 export function Animated() {
   const containerVariants = {
@@ -7,9 +7,9 @@ export function Animated() {
     visible: {
       opacity: 1,
       transition: {
-        duration: 2,
-        staggerChildren: 0.8,
-        ease: easeInOut,
+        duration: 1,
+        staggerChildren: 0.5,
+        ease: backInOut,
       },
     },
   };

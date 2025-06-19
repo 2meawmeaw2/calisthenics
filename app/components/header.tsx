@@ -1,14 +1,24 @@
 // components/header.jsx
 "use client";
 import Image from "next/image";
-import { motion, backOut } from "framer-motion";
+import { motion, backOut, easeInOut, easeOut } from "framer-motion";
 
 export default function Header() {
   return (
     <motion.nav
       initial={{ opacity: 0, y: 110 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ ease: backOut, duration: 2, delay: 1 }}
+      animate={{ opacity: [0, 0.5, 1], y: 0 }}
+      transition={{
+        opacity: {
+          times: [0, 0.5, 1],
+          duration: 2,
+          delay: 1,
+          ease: [backOut, easeInOut],
+        },
+        ease: easeOut,
+        duration: 1,
+        delay: 1,
+      }}
       className="h-[5rem] w-full  sticky top-0 z-[100] flex justify-between items-center px-[5%] md:px-[10%] backdrop-blur-md border-b border-gray-800"
     >
       <div className="relative h-[3.5rem] w-[4rem] md:h-[4.5rem] md:w-[4.8rem]">

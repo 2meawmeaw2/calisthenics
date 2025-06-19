@@ -116,7 +116,7 @@ export default function Intro() {
   );
 
   const y4 = useSpring(
-    useTransform(scrollYProgress, [0.16687422166874222, 0], [100, 0]),
+    useTransform(scrollYProgress, [0.16687422166874222, 0.1], [100, 0]),
     {
       stiffness: 100,
       damping: 30,
@@ -135,7 +135,7 @@ export default function Intro() {
       <motion.section
         style={{ opacity: op, y: y }}
         ref={ref}
-        className="w-full h-[150vh] py-3 mb-[10rem] relative  "
+        className="w-full h-[180vh] py-3 mb-[10rem] relative  "
       >
         <div className="w-full sticky top-0 h-screen flex flex-col justify-center items-center ">
           <motion.div
