@@ -1,4 +1,3 @@
-"use client";
 import "./globals.css";
 import { Outfit, Rajdhani } from "next/font/google";
 import localFont from "next/font/local";
@@ -22,6 +21,11 @@ const rajdhani = Rajdhani({
   display: "swap",
   variable: "--font-rajdhani",
 });
+
+export const metadata = {
+  title: "Bring Idea To Code",
+  description: "Meaw",
+};
 
 export default function RootLayout({
   children,
