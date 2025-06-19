@@ -23,7 +23,7 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata = {
-  title: "Bring Idea To Code",
+  title: "Steady core ?",
   description: "Meaw",
   icons: {
     icon: "/dark-nb.svg", // Path relative to the public directory
