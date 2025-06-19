@@ -86,6 +86,7 @@ export default function Hero() {
   });
 
   const opacity = useTransform(scrollYProgress, [1, 0.8], [1, 0]);
+  const y = useTransform(scrollYProgress, [1, 0.8], [0, -200]);
   const opacity2 = useTransform(scrollYProgress, [1, 0.4], [1, 0]);
   /*       */
 
@@ -122,7 +123,7 @@ export default function Hero() {
         className=" w-full h-[100vh] flex flex-col justify-start items-center pt-[2rem] "
       >
         <motion.div
-          style={{ opacity: opacity }}
+          style={{ opacity: opacity, y: y }}
           className="h-screen w-full max-w-[1600px] p-3 flex flex-col  justify-center items-center gap-10"
         >
           <motion.div
