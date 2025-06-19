@@ -25,6 +25,9 @@ const rajdhani = Rajdhani({
 export const metadata = {
   title: "Bring Idea To Code",
   description: "Meaw",
+  icons: {
+    icon: "/dark-nb.svg", // Path relative to the public directory
+  },
 };
 
 export default function RootLayout({

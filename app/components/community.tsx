@@ -9,7 +9,7 @@ export function Animated() {
       transition: {
         duration: 1,
         staggerChildren: 0.5,
-        ease: backInOut,
+        ease: easeInOut,
       },
     },
   };
