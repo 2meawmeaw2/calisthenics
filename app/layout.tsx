@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Outfit, Rajdhani } from "next/font/google";
 import localFont from "next/font/local";
-
+import ReactLenis from "lenis/react";
 const myFont = localFont({
   src: "./ClashGrotesk-Variable.ttf",
   variable: "--font-Clash", // define the CSS variable
@@ -37,13 +37,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={myFont.className}>
-      <body
-        className={`bg-background ${myFont.className} ${rajdhani.variable} ${outfit.variable} antialiased`}
-      >
-        {/* Sticky background */}
+      <ReactLenis>
+        <body
+          className={`bg-background ${myFont.className} ${rajdhani.variable} ${outfit.variable} antialiased`}
+        >
+          {/* Sticky background */}
 
-        {children}
-      </body>
+          {children}
+        </body>
+      </ReactLenis>
     </html>
   );
 }

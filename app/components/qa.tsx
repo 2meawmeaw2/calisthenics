@@ -90,7 +90,7 @@ export default function QA() {
                         opacity: { duration: 0.2, ease: "easeInOut" },
                       },
                     }}
-                    className="overflow-hidden"
+                    className="overflow-hidden "
                   >
                     <motion.div
                       initial={{ y: -20, opacity: 0 }}
