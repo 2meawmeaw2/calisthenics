@@ -6,21 +6,34 @@ import Pricing from "./components/pricing";
 import QA from "./components/qa";
 import CTA from "./components/cta";
 import Footer from "./components/footer";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
+// ScrollSmoother requires ScrollTrigger
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+
+gsap.registerPlugin(useGSAP, ScrollSmoother);
 export default function Home() {
+  useGSAP(() => {
+    ScrollSmoother.create({ smooth: 3, effects: true });
+  });
   return (
-    <main className="relative h-full">
-      <Header />
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main className="relative h-full">
+          <Header />
 
-      <Hero />
+          <Hero />
 
-      <Intro />
-      <Community />
-      <Pricing />
-      <QA />
-      <CTA />
-      <Footer />
-    </main>
+          <Intro />
+          <Community />
+          <Pricing />
+          <QA />
+          <CTA />
+          <Footer />
+        </main>
+      </div>
+    </div>
   );
 }
 /*
