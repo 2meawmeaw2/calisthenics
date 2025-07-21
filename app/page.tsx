@@ -1,3 +1,4 @@
+"use client";
 import Hero from "./components/Hello";
 import Intro from "./components/intro";
 import Header from "./components/header";
@@ -14,26 +15,18 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 gsap.registerPlugin(useGSAP, ScrollSmoother);
 export default function Home() {
-  useGSAP(() => {
-    ScrollSmoother.create({ smooth: 3, effects: true });
-  });
   return (
-    <div id="smooth-wrapper">
-      <div id="smooth-content">
-        <main className="relative h-full">
-          <Header />
-
-          <Hero />
-
-          <Intro />
-          <Community />
-          <Pricing />
-          <QA />
-          <CTA />
-          <Footer />
-        </main>
-      </div>
-    </div>
+    <main className="relative h-full">
+      {" "}
+      <Header />
+      <Hero />
+      <Intro />
+      <Community />
+      <Pricing />
+      <QA />
+      <CTA />
+      <Footer />{" "}
+    </main>
   );
 }
 /*

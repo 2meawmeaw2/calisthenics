@@ -37,15 +37,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={myFont.className}>
-      <ReactLenis>
-        <body
-          className={`bg-background ${myFont.className} ${rajdhani.variable} ${outfit.variable} antialiased`}
-        >
+      <body
+        className={`bg-background ${myFont.className} ${rajdhani.variable} ${outfit.variable} antialiased`}
+      >
+        {" "}
+        <ReactLenis root>
           {/* Sticky background */}
 
           {children}
-        </body>
-      </ReactLenis>
+        </ReactLenis>{" "}
+      </body>
     </html>
   );
 }
