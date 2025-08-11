@@ -34,7 +34,7 @@ export function Hello() {
         style={{ boxShadow }}
         className="w-full p-[2em]  flex flex-col items-center justify-center bg-foreground shadow-xl/10 shadow-white  rounded-4xl"
       >
-        <h1 className="text-2xl md:text-4xl xl:text-[6xl] m-3 md:m-4 xl:m-6  text-center text-primary text-nowrap text-shadow-md/25 text-shadow-primary font-Clash font-[500] tracking-wide  ">
+        <h1 className="text-xl  md:text-4xl xl:text-[6xl] m-3 md:m-4 xl:m-6  text-center text-primary text-nowrap text-shadow-md/25 text-shadow-primary font-Clash font-[500] tracking-tight  ">
           Master your body with{" "}
           <motion.span
             initial={{ opacity: 0 }}
@@ -52,7 +52,7 @@ export function Hello() {
           </motion.span>
         </h1>
 
-        <p className="text-xl md:text-xl xl:text-[3xl] text-highlight text-shadow-md/20 font-medium font-rajdhani text-shadow-primary max-w-300  text-center">
+        <p className="text-md font-light md:text-xl xl:text-[3xl] text-highlight text-shadow-md/20  font-rajdhani text-shadow-primary max-w-300  text-center">
           <motion.span
             initial={{ opacity: 0 }}
             animate={{
@@ -130,7 +130,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 110 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ease: backOut, duration: 2, delay: 1 }}
-            className="w-full h-fit  px-6 max-w-[1200px]  "
+            className="w-full h-fit  lg:px-6 max-w-[1200px]  "
           >
             <Hello />
           </motion.div>

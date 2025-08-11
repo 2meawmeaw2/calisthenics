@@ -40,7 +40,7 @@ export default function QA() {
         </h3>
       </div>
 
-      <div className="max-w-[1600px] mx-auto mt-20 px-4">
+      <div className="max-w-[1600px] mx-auto mt-20 lg:px-4">
         <div className="space-y-4">
           {faqData.map((item, index) => (
             <motion.div
@@ -54,7 +54,7 @@ export default function QA() {
                 className="w-full p-8 text-left flex justify-between items-center hover:bg-highlight/10 transition-colors duration-200"
                 whileTap={{ scale: 0.98 }}
               >
-                <h3 className="text-2xl font-bold text-primary">
+                <h3 className="text-lg lg:text-2xl font-bold text-primary">
                   {item.question}
                 </h3>
                 <motion.div
@@ -113,7 +113,7 @@ export default function QA() {
                       }}
                       className="px-8 pb-8"
                     >
-                      <p className="text-secondary text-lg leading-relaxed">
+                      <p className="text-secondary text-xs font-light lg:text-lg leading-relaxed">
                         {item.answer}
                       </p>
                     </motion.div>
