@@ -1,5 +1,5 @@
 "use client";
-import { motion, easeInOut, backInOut } from "motion/react";
+import { motion, easeInOut } from "motion/react";
 
 export function Animated() {
   const containerVariants = {

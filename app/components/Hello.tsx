@@ -105,7 +105,7 @@ export default function Hero() {
       repeat: Infinity,
       repeatType: "reverse",
     });
-  }, [COLORS_TOP, color, imageOp]);
+  }, [color, imageOp]);
 
   const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
 
