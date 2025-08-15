@@ -76,7 +76,7 @@ export default function CTA() {
               "No equipment required to start",
               "Science-backed progressions",
               "Cancel anytime—no hassle",
-            ].map((b, i) => (
+            ].map((b) => (
               <li key={b} className="flex items-start gap-2 sm:gap-3">
                 <FiCheck aria-hidden className="mt-0.5 text-action shrink-0" />
                 <span className="text-primary text-sm sm:text-base">{b}</span>

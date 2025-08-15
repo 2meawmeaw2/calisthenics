@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FiChevronDown, FiSearch } from "react-icons/fi";
+
 type HeaderRefs = Record<string, HTMLButtonElement | null>;
 
 type FaqItem = { question: string; answer: string };
@@ -40,37 +41,38 @@ function slugify(str: string) {
     .slice(0, 80);
 }
 
+// ✅ Hoist static FAQ data so it isn't re-created every render
+const FAQ_DATA: FaqItem[] = [
+  {
+    question: "Question 1 Placeholder",
+    answer:
+      "Answer 1 placeholder text goes here. This is where the detailed answer to the question would appear.",
+  },
+  {
+    question: "Question 2 Placeholder",
+    answer:
+      "Answer 2 placeholder text goes here. This is where the detailed answer to the question would appear.",
+  },
+  {
+    question: "Question 3 Placeholder",
+    answer:
+      "Answer 3 placeholder text goes here. This is where the detailed answer to the question would appear.",
+  },
+];
+
 export default function QA() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const headerRefs = useRef<HeaderRefs>({});
 
-  const faqData: FaqItem[] = [
-    {
-      question: "Question 1 Placeholder",
-      answer:
-        "Answer 1 placeholder text goes here. This is where the detailed answer to the question would appear.",
-    },
-    {
-      question: "Question 2 Placeholder",
-      answer:
-        "Answer 2 placeholder text goes here. This is where the detailed answer to the question would appear.",
-    },
-    {
-      question: "Question 3 Placeholder",
-      answer:
-        "Answer 3 placeholder text goes here. This is where the detailed answer to the question would appear.",
-    },
-  ];
-
-  // Build IDs once per item
+  // Build IDs once per item (derived from hoisted data)
   const itemsWithIds = useMemo(
     () =>
-      faqData.map((it) => ({
+      FAQ_DATA.map((it) => ({
         ...it,
         id: `q-${slugify(it.question)}`,
       })),
-    [faqData]
+    []
   );
 
   // Filter by search query
@@ -93,6 +95,8 @@ export default function QA() {
       if (found) {
         setOpenId(found.id);
         // Scroll to it (polite)
+        const el = headerRefs.current[found.id];
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     };
     openFromHash();
@@ -104,7 +108,9 @@ export default function QA() {
     const next = openId === id ? null : id;
     setOpenId(next);
     // Update URL hash for deep linking (no page jump)
-    history.replaceState(null, "", next ? `#${id}` : " ");
+    const base = `${location.pathname}${location.search}`;
+    const url = next ? `${base}#${id}` : base;
+    history.replaceState(null, "", url);
   };
 
   // Keyboard navigation across headings
@@ -203,6 +209,7 @@ export default function QA() {
                 onChange={(e) => setQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-foreground ring-1 ring-highlight/20 focus:ring-2 focus:ring-action outline-none text-primary placeholder:text-secondary/60"
                 autoComplete="off"
+                aria-controls="faq-accordion"
               />
             </div>
           </div>
@@ -213,6 +220,7 @@ export default function QA() {
 
         {/* List */}
         <div
+          id="faq-accordion"
           className="mt-8 sm:mt-12 space-y-4"
           role="region"
           aria-label="FAQ accordion"
@@ -221,6 +229,8 @@ export default function QA() {
             <motion.div
               variants={row(0.05)}
               className="rounded-2xl p-8 text-center ring-1 ring-highlight/15 bg-foreground text-secondary"
+              role="status"
+              aria-live="polite"
             >
               No questions match “{query}”.
             </motion.div>
@@ -313,7 +323,12 @@ export default function QA() {
         </div>
       </div>
 
-      {/* SEO: FAQPage JSON-LD (safe to hydrate as static) */}
+      {/* SEO: FAQPage JSON-LD */}
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: faqJsonLd }}
+      />
     </motion.section>
   );
 }

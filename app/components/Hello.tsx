@@ -51,7 +51,8 @@ function HeadingBlock() {
 
   return (
     <motion.section
-      aria-labelledby="hero-title"
+      id="hero"
+      aria-labelledby="hero"
       style={{ boxShadow: cardShadow }}
       className="w-full max-w-[1200px] p-7 md:p-10 rounded-3xl border border-white/10 bg-[var(--color-foreground)]/90 backdrop-blur-md"
       initial={

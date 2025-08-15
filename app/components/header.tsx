@@ -2,9 +2,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FiMenu, FiX } from "react-icons/fi";
 
@@ -23,20 +21,38 @@ const navVariants = {
   },
 };
 
+// Configure your 7 communities (ids must match section ids on the page)
+const SECTIONS = [
+  { id: "hero", label: "Hero" },
+  { id: "programs", label: "Features" },
+  { id: "programs", label: "Community" },
+  { id: "programs", label: "Pricing" },
+] as const;
+
 export default function Header() {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const navWrapRef = useRef<HTMLDivElement | null>(null);
+  const [navHeight, setNavHeight] = useState<number>(76);
 
-  const links = useMemo(
-    () => [
-      { href: "/", label: "Home" },
-      { href: "/workouts", label: "Workouts" },
-      { href: "/about", label: "About" },
-    ],
-    []
-  );
+  // measure sticky header height for offset
+  useEffect(() => {
+    const measure = () => {
+      const h = navWrapRef.current?.offsetHeight ?? 76;
+      setNavHeight(h);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (navWrapRef.current) ro.observe(navWrapRef.current);
+    window.addEventListener("resize", measure, { passive: true });
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
 
+  // sticky state
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -44,22 +60,79 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // lock body scroll when mobile menu open
   useEffect(() => {
-    // Close mobile menu on route change
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    // Lock body scroll when menu open
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
+  // Smooth scroll to a section with header offset
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - (navHeight + 8);
+    window.scrollTo({ top: y, behavior: "smooth" });
+    history.replaceState(null, "", `#${id}`);
+    setOpen(false);
+  };
+
+  // Observe sections to update activeId
+  useEffect(() => {
+    const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
+      Boolean
+    ) as HTMLElement[];
+    if (!targets.length) return;
+
+    let ticking = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // pick the most visible intersecting section
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort(
+            (a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0)
+          );
+        if (visible[0]) {
+          const id = visible[0].target.id;
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+              setActiveId(id);
+              ticking = false;
+            });
+          }
+        }
+      },
+      {
+        // top margin accounts for sticky header
+        root: null,
+        rootMargin: `-${navHeight + 12}px 0px -50% 0px`,
+        threshold: [0.25, 0.5, 0.75, 1],
+      }
+    );
+
+    targets.forEach((t) => observer.observe(t));
+    return () => observer.disconnect();
+  }, [navHeight]);
+
+  // Open the section in URL hash on load
+  useEffect(() => {
+    const hash = decodeURIComponent(window.location.hash.replace("#", ""));
+    if (hash) {
+      // small delay so navHeight is measured
+      setTimeout(() => scrollTo(hash), 60);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const desktopLinks = useMemo(() => SECTIONS, []);
+  const mobileLinks = useMemo(() => SECTIONS, []);
+
   return (
     <>
-      {/* Skip link for accessibility */}
+      {/* Skip link */}
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-action focus:text-black focus:px-3 focus:py-2 focus:rounded-lg"
@@ -73,20 +146,22 @@ export default function Header() {
         variants={navVariants}
         aria-label="Primary"
         className={[
-          "sticky top-0 z-[100] h-[4.25rem] md:h-[4.75rem] w-full",
+          "sticky top-0 z-[100] w-full",
           "backdrop-blur-md transition-all",
           "border-b",
           scrolled
             ? "bg-foreground/70 border-highlight/20"
             : "bg-foreground/40 border-highlight/10",
         ].join(" ")}
+        ref={navWrapRef}
       >
-        <div className="mx-auto max-w-screen-2xl px-[5%] md:px-[6%] lg:px-[8%] h-full flex items-center justify-between">
+        <div className="mx-auto max-w-screen-2xl px-[5%] md:px-[6%] lg:px-[8%] h-[4.25rem] md:h-[4.75rem] flex items-center justify-between">
           {/* Logo */}
-          <Link
-            href="/"
-            aria-label="Go to home"
-            className="flex items-center gap-3"
+          <button
+            type="button"
+            onClick={() => scrollTo(SECTIONS[0].id)}
+            aria-label="Go to top"
+            className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action rounded-lg"
           >
             <div className="relative h-9 w-9 md:h-11 md:w-11">
               <Image
@@ -100,22 +175,23 @@ export default function Header() {
             <span className="hidden sm:block font-Clash text-primary text-lg md:text-xl tracking-tight">
               Steady Core
             </span>
-          </Link>
+          </button>
 
-          {/* Desktop nav */}
+          {/* Desktop nav (sections) */}
           <div className="hidden md:flex items-center gap-2 lg:gap-3">
             <ul className="flex items-center gap-1 lg:gap-2">
-              {links.map((l) => {
-                const active = pathname === l.href;
+              {desktopLinks.map((l) => {
+                const active = activeId === l.id;
                 return (
-                  <li key={l.href} className="relative">
-                    <Link
-                      href={l.href}
-                      aria-current={active ? "page" : undefined}
+                  <li key={l.id} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => scrollTo(l.id)}
+                      aria-current={active ? "location" : undefined}
                       className={[
                         "px-3 py-2 lg:px-4 lg:py-2 rounded-xl text-sm md:text-[0.95rem] font-medium",
                         "text-primary hover:bg-highlight/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action",
-                        "transition-colors motion-reduce:transition-none",
+                        "transition-colors motion-reduce:transition-none relative",
                       ].join(" ")}
                     >
                       <span className="relative z-10">{l.label}</span>
@@ -131,18 +207,19 @@ export default function Header() {
                           aria-hidden="true"
                         />
                       )}
-                    </Link>
+                    </button>
                   </li>
                 );
               })}
             </ul>
 
-            <Link
-              href="/get-started"
+            <button
+              type="button"
+              onClick={() => scrollTo(SECTIONS[0].id)}
               className="ml-2 px-4 py-2 rounded-xl bg-action text-black font-black hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
             >
               Get Started
-            </Link>
+            </button>
           </div>
 
           {/* Mobile: burger */}
@@ -177,34 +254,36 @@ export default function Header() {
             >
               <div className="px-[5%] pb-4 pt-2">
                 <ul className="flex flex-col gap-1">
-                  {links.map((l) => {
-                    const active = pathname === l.href;
+                  {mobileLinks.map((l) => {
+                    const active = activeId === l.id;
                     return (
-                      <li key={l.href}>
-                        <Link
-                          href={l.href}
+                      <li key={l.id}>
+                        <button
+                          type="button"
+                          onClick={() => scrollTo(l.id)}
                           className={[
-                            "block w-full px-3 py-3 rounded-lg text-primary",
+                            "block w-full text-left px-3 py-3 rounded-lg text-primary",
                             "hover:bg-highlight/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action",
                             active
                               ? "bg-highlight/15 ring-1 ring-highlight/25"
                               : "ring-1 ring-transparent",
                           ].join(" ")}
-                          aria-current={active ? "page" : undefined}
+                          aria-current={active ? "location" : undefined}
                         >
                           {l.label}
-                        </Link>
+                        </button>
                       </li>
                     );
                   })}
                 </ul>
 
-                <Link
-                  href="/get-started"
+                <button
+                  type="button"
+                  onClick={() => scrollTo(SECTIONS[0].id)}
                   className="mt-3 inline-flex w-full items-center justify-center px-4 py-3 rounded-lg bg-action text-black font-black hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
                 >
                   Get Started
-                </Link>
+                </button>
               </div>
             </motion.div>
           )}
