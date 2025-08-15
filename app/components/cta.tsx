@@ -1,108 +1,191 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "motion/react";
-import { FiArrowRight, FiDownload, FiStar } from "react-icons/fi";
+import { FiArrowRight, FiDownload, FiStar, FiCheck } from "react-icons/fi";
+
+const container = {
+  hidden: { opacity: 0, y: 40 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 120, damping: 22, duration: 0.8 },
+  },
+};
+
+const item = (delay = 0) => ({
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 120,
+      damping: 22,
+      duration: 0.7,
+      delay,
+    },
+  },
+});
 
 export default function CTA() {
   return (
-    <section className="min-h-screen w-full bg-foreground p-[5%] py-20">
-      <div className="max-w-[1600px] mx-auto text-center">
-        {/* Main CTA Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mb-16"
+    <motion.section
+      id="cta"
+      aria-labelledby="cta-title"
+      className="relative w-full py-12 sm:py-16 lg:py-20 mb-12 sm:mb-20 md:mb-28"
+      initial="hidden"
+      whileInView="show"
+      viewport={{ amount: 0.3, once: true }}
+    >
+      {/* Decorative background orbs */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
+        <div className="absolute -top-24 -left-20 h-60 w-60 rounded-full bg-action/10 blur-3xl" />
+        <div className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-highlight/10 blur-3xl" />
+      </div>
+
+      <div className="w-full mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 text-center">
+        {/* Header card */}
+        <motion.header
+          variants={container}
+          className="rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xs shadow-highlight bg-foreground/60 backdrop-blur-sm ring-1 ring-highlight/10"
         >
-          <h1 className="text-4xl md:text-6xl xl:text-[8xl] text-primary font-black tracking-wide text-shadow-primary mb-6">
+          <p className="uppercase tracking-wide text-xs sm:text-sm text-secondary/80 mb-1">
+            Take the next step
+          </p>
+          <h1
+            id="cta-title"
+            className="text-highlight text-[clamp(2.2rem,6vw,5rem)] leading-[1.05] font-Clash tracking-tight font-medium italic"
+          >
             Ready to Transform
           </h1>
-          <h2 className="text-2xl md:text-4xl xl:text-[5xl] text-highlight font-bold text-shadow-primary mb-8">
+          <h2 className="text-primary/90 font-semibold text-lg sm:text-2xl md:text-3xl lg:text-4xl mt-2">
             Your Fitness Journey?
           </h2>
-          <p className="text-xl md:text-2xl text-secondary max-w-4xl mx-auto leading-relaxed mb-12">
-            Join thousands of athletes who have already mastered calisthenics
-            skills. Start your journey today and build the strength you&apos;ve
-            always wanted.
+          <p className="font-rajdhani text-secondary max-w-[70ch] mx-auto text-sm sm:text-base md:text-lg leading-relaxed mt-3">
+            Join thousands of athletes mastering calisthenics skills. Build real
+            strength with structured programs, clear progress, and pro guidance.
           </p>
-        </motion.div>
 
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-col md:flex-row gap-6 justify-center items-center mb-16"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="group bg-action text-black font-black text-xl px-12 py-6 rounded-2xl hover:bg-highlight transition-all duration-300 flex items-center gap-3 shadow-lg shadow-action/30"
-          >
-            Start Free Trial
-            <FiArrowRight
-              className="group-hover:translate-x-1 transition-transform"
-              size={24}
-            />
-          </motion.button>
+          {/* Benefit bullets */}
+          <ul className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-left max-w-4xl mx-auto">
+            {[
+              "No equipment required to start",
+              "Science-backed progressions",
+              "Cancel anytime—no hassle",
+            ].map((b, i) => (
+              <li key={b} className="flex items-start gap-2 sm:gap-3">
+                <FiCheck aria-hidden className="mt-0.5 text-action shrink-0" />
+                <span className="text-primary text-sm sm:text-base">{b}</span>
+              </li>
+            ))}
+          </ul>
 
-          <motion.button
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="group bg-transparent border-2 border-highlight text-highlight font-black text-xl px-12 py-6 rounded-2xl hover:bg-highlight hover:text-black transition-all duration-300 flex items-center gap-3"
-          >
-            <FiDownload size={24} />
-            Download App
-          </motion.button>
-        </motion.div>
+          {/* Divider */}
+          <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-highlight/20 to-transparent" />
+        </motion.header>
 
-        {/* Social Proof */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
-        >
+        {/* CTAs */}
+        <div className="mt-8 sm:mt-12 flex flex-col md:flex-row gap-4 sm:gap-6 justify-center items-center">
+          <motion.div variants={item(0.05)}>
+            <Link
+              href="/get-started"
+              className="group inline-flex items-center justify-center gap-3 rounded-2xl px-8 sm:px-10 py-4 sm:py-5 bg-action text-black font-black text-base sm:text-lg ring-1 ring-black/10 hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
+              aria-describedby="cta-note"
+            >
+              Start Free Trial
+              <FiArrowRight
+                aria-hidden="true"
+                className="transition-transform group-hover:translate-x-1"
+                size={22}
+              />
+            </Link>
+          </motion.div>
+
+          <motion.div variants={item(0.1)}>
+            <Link
+              href="/download"
+              className="group inline-flex items-center justify-center gap-3 rounded-2xl px-8 sm:px-10 py-4 sm:py-5 bg-transparent text-highlight font-black text-base sm:text-lg ring-2 ring-highlight hover:bg-highlight hover:text-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
+            >
+              <FiDownload aria-hidden="true" size={22} />
+              Download App
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Helper note */}
+        <p id="cta-note" className="mt-3 text-xs sm:text-sm text-secondary/80">
+          7-day free trial. No credit card required to start.
+        </p>
+
+        {/* Stats / social proof */}
+        <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-foreground border border-highlight/30 rounded-2xl p-8 text-center"
+            variants={item(0.15)}
+            whileHover={{ y: -3 }}
+            className="rounded-2xl p-6 sm:p-8 text-center bg-foreground ring-1 ring-highlight/15"
           >
-            <div className="flex justify-center mb-4">
-              <FiStar className="text-action" size={32} />
+            <div className="flex justify-center mb-3">
+              <FiStar aria-hidden className="text-action" size={28} />
             </div>
-            <h3 className="text-2xl font-bold text-primary mb-2">4.9/5</h3>
-            <p className="text-secondary">App Store Rating</p>
+            <h3 className="text-2xl sm:text-3xl font-black text-highlight">
+              4.9/5
+            </h3>
+            <p className="text-secondary text-sm sm:text-base">
+              Average rating
+            </p>
           </motion.div>
 
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-foreground border border-highlight/30 rounded-2xl p-8 text-center"
+            variants={item(0.18)}
+            whileHover={{ y: -3 }}
+            className="rounded-2xl p-6 sm:p-8 text-center bg-foreground ring-1 ring-highlight/15"
           >
-            <h3 className="text-3xl font-black text-highlight mb-2">50K+</h3>
-            <p className="text-secondary">Active Athletes</p>
+            <h3 className="text-2xl sm:text-3xl font-black text-highlight">
+              50K+
+            </h3>
+            <p className="text-secondary text-sm sm:text-base">
+              Active Athletes
+            </p>
           </motion.div>
 
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-foreground border border-highlight/30 rounded-2xl p-8 text-center"
+            variants={item(0.21)}
+            whileHover={{ y: -3 }}
+            className="rounded-2xl p-6 sm:p-8 text-center bg-foreground ring-1 ring-highlight/15"
           >
-            <h3 className="text-3xl font-black text-highlight mb-2">200+</h3>
-            <p className="text-secondary">Workout Programs</p>
+            <h3 className="text-2xl sm:text-3xl font-black text-highlight">
+              200+
+            </h3>
+            <p className="text-secondary text-sm sm:text-base">
+              Workout Programs
+            </p>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Urgency Message */}
+        {/* Urgency banner */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-16 p-6 bg-highlight/10 border border-highlight/30 rounded-2xl max-w-2xl mx-auto"
+          variants={item(0.26)}
+          role="status"
+          aria-live="polite"
+          className="mt-10 sm:mt-12 max-w-2xl mx-auto"
         >
-          <p className="text-highlight font-semibold text-lg">
-            🎯 Limited Time: Get 50% off your first month when you start today!
-          </p>
+          <div className="relative rounded-2xl p-4 sm:p-6 bg-highlight/10 ring-1 ring-highlight/30">
+            <p className="text-highlight font-semibold text-sm sm:text-base">
+              🎯 Limited Time: Get <span className="font-black">50% off</span>{" "}
+              your first month when you start today!
+            </p>
+            {/* subtle animated underline */}
+            <span
+              aria-hidden
+              className="absolute left-4 right-4 bottom-3 h-px bg-gradient-to-r from-transparent via-action/40 to-transparent"
+            />
+          </div>
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

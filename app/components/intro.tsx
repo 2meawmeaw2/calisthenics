@@ -1,271 +1,240 @@
 "use client";
 import Image from "next/image";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "motion/react";
-import { useRef } from "react";
+import { motion } from "motion/react";
 
 export default function Intro() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["end end", "start end"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    console.log("Scroll progresssss:", latest);
-  });
-
-  const opacity = useTransform(
-    scrollYProgress,
-    [0.7762106252938411, 0.7240896358543417],
-    [0, 1]
-  );
-  const yt = useTransform(
-    scrollYProgress,
-    [0.7762106252938411, 0.7240896358543417],
-    [0, 50]
-  );
-  const y = useSpring(yt, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-  const op = useSpring(opacity, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const work1 = useTransform(
-    scrollYProgress,
-    [0.7801120448179272, 0.4084682440846824],
-    [0, 1]
-  );
-  const work11 = useSpring(work1, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-  const work2 = useTransform(
-    scrollYProgress,
-    [0.4084682440846824, 0.31980073199622505],
-    [0, 1]
-  );
-  const work22 = useSpring(work2, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-  const work3 = useTransform(
-    scrollYProgress,
-    [0.31980073199622505, 0.16687422166874222],
-    [0, 1]
-  );
-  const work33 = useSpring(work3, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-  const work4 = useTransform(scrollYProgress, [0.16687422166874222, 0], [0, 1]);
-  const work44 = useSpring(work4, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const y1 = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0.7801120448179272, 0.4084682440846824],
-      [100, 0]
-    ),
-    {
-      stiffness: 100,
-      damping: 30,
-      restDelta: 0.001,
-    }
-  );
-
-  const y2 = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0.4084682440846824, 0.31980073199622505],
-      [100, 0]
-    ),
-    {
-      stiffness: 100,
-      damping: 30,
-      restDelta: 0.001,
-    }
-  );
-
-  const y3 = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0.31980073199622505, 0.16687422166874222],
-      [100, 0]
-    ),
-    {
-      stiffness: 100,
-      damping: 30,
-      restDelta: 0.001,
-    }
-  );
-
-  const y4 = useSpring(
-    useTransform(scrollYProgress, [0.16687422166874222, 0.1], [100, 0]),
-    {
-      stiffness: 100,
-      damping: 30,
-      restDelta: 0.001,
-    }
-  );
-
   return (
     <>
       <motion.section
-        style={{ opacity: op, y: y }}
-        ref={ref}
-        className="w-full h-[180vh] py-1 sm:py-3 mb-[3rem] sm:mb-[5rem] md:mb-[10rem] relative"
+        id="programs"
+        aria-labelledby="programs-title"
+        // More breathing room on desktop
+        className="w-full py-10 sm:py-14 lg:py-20 mb-16 sm:mb-24 lg:mb-32 relative"
       >
-        <div className="w-full sticky top-0 h-screen flex flex-col justify-center items-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, boxShadow: "none" }}
-            transition={{ duration: 2 }}
-            className="p-2 sm:p-4 md:p-6 lg:p-10 w-full flex flex-col justify-center items-center h-[20%] sm:h-[25%] md:h-[20%] lg:h-[30%] shadow-2xs shadow-highlight"
+        <div className="w-full mx-auto max-w-screen-xl 2xl:max-w-screen-2xl px-5 sm:px-6 lg:px-8">
+          {/* Header / Hero (constrained width for desktop to reduce line length) */}
+          <motion.header
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ amount: 1, once: true }}
+            transition={{
+              type: "spring",
+              stiffness: 120,
+              damping: 22,
+              duration: 2,
+              delay: 0.01,
+            }}
+            className="rounded-2xl mx-auto max-w-4xl lg:max-w-5xl p-5 sm:p-7 md:p-8 lg:p-10 shadow-2xs shadow-highlight bg-foreground/60 backdrop-blur-sm ring-1 ring-highlight/10"
           >
-            <h1 className="text-highlight text-center font-black text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl italic py-0.5 sm:py-1 md:py-2">
+            <p className="uppercase tracking-wide text-xs sm:text-sm text-secondary/80 text-center mb-1.5 sm:mb-2">
+              Programs & Sessions
+            </p>
+            <h1
+              id="programs-title"
+              className="text-highlight text-[clamp(2.2rem,5.5vw,4.5rem)] leading-[1.05] font-Clash tracking-tight text-center font-medium italic"
+            >
               Workouts
             </h1>
-            <h1 className="text-primary text-center font-semibold text-base xs:text-lg sm:text-xl md:text-2xl lg:text-5xl py-0.5 sm:py-1">
+            <h2 className="text-primary/90 text-center font-semibold text-lg sm:text-2xl md:text-3xl lg:text-4xl mt-2 sm:mt-3">
               To achieve your goals
-            </h1>
-            <h1 className="font-rajdhani text-center text-secondary text-xs xs:text-sm sm:text-base md:text-lg leading-tight">
+            </h2>
+            <p className="font-rajdhani text-center text-secondary max-w-[65ch] mx-auto text-sm sm:text-base md:text-lg leading-relaxed mt-2">
               Different ways of training for different goals
-            </h1>
-          </motion.div>
+            </p>
 
-          <div className="flex w-full flex-col justify-center items-center lg:flex-row gap-2 xs:gap-2 sm:gap-3 lg:gap-[2%] h-[80%] xs:h-[75%] sm:h-[80%] md:h-[70%] max-w-[1600px] mx-auto px-2 sm:px-4 py-1 sm:py-3">
-            <motion.div
-              style={{ opacity: work11, y: y1 }}
-              className="pl-3 xs:pl-4 sm:pl-6 md:pl-10 border-1 border-highlight group cursor-pointer hover:border-action transition-all ease-in-out bg-foreground rounded-xl sm:rounded-2xl w-full h-full lg:h-[60%] max-h-140 p-1.5 xs:p-2 sm:p-3 flex flex-col justify-center gap-3  xs:gap-2 sm:gap-3 md:gap-4"
-            >
-              <div className="h-[15%] xs:h-[18%] sm:h-[16%] md:h-[14%] w-8 xs:w-10 sm:w-16 md:w-20 lg:w-[20%] max-w-20">
-                <Image
-                  width={256}
-                  height={256}
-                  src="/programb.png"
-                  alt="challenge"
-                  className="group-hover:hidden w-full h-auto"
-                />
-                <Image
-                  width={256}
-                  height={256}
-                  src="/programg.png"
-                  alt="challenge"
-                  className="hidden group-hover:block w-full h-auto"
-                />
-              </div>
-              <h1 className="text-primary text-shadow-xs group-hover:text-action uppercase text-shadow-highlight font-semibold text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl py-0.5 sm:py-1">
-                Programs
-              </h1>
-              <p className="font-rajdhani text-secondary group-hover:text-action transition-all ease-in-out duration-300 text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl leading-snug xs:leading-relaxed">
-                Discover well prepared programs for different goals, Strength,
-                Skills, Hypertrophy
-              </p>
-            </motion.div>
+            {/* subtle divider to separate header from grid */}
+            <div className="mt-5 sm:mt-6 lg:mt-8 h-px w-full bg-gradient-to-r from-transparent via-highlight/20 to-transparent" />
+          </motion.header>
 
-            <motion.div
-              style={{ opacity: work22, y: y2 }}
-              className="pl-3 xs:pl-4 sm:pl-6 md:pl-10 border-1 border-highlight group cursor-pointer hover:border-action bg-foreground rounded-xl sm:rounded-2xl w-full h-full lg:h-[60%] max-h-140 p-1.5 xs:p-2 sm:p-3 flex flex-col justify-center gap-3  xs:gap-2 sm:gap-3 md:gap-4"
+          {/* Cards Grid */}
+          {/* 12-col grid on lg: 2 columns (6/12 each). On xl+: 4 columns (3/12 each). */}
+          <div className="mt-8 sm:mt-12 lg:mt-16 grid gap-4 sm:gap-6 lg:gap-x-8 lg:gap-y-10 xl:gap-x-10 2xl:gap-x-12 lg:grid-cols-12">
+            {/* Card 1 */}
+            <motion.article
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ amount: 1, once: true }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 22,
+                duration: 2,
+                delay: 0.04,
+              }}
+              className="group relative overflow-hidden rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8 bg-foreground ring-1 ring-highlight/15 hover:ring-action/40 shadow-sm hover:shadow-md transition-all ease-out hover:-translate-y-1 focus-within:ring-action h-full min-h-[220px] lg:min-h-[240px] lg:col-span-6 xl:col-span-3"
+              tabIndex={0}
+              aria-label="Programs"
             >
-              <div className="h-[15%] xs:h-[18%] sm:h-[16%] md:h-[14%] w-8 xs:w-10 sm:w-16 md:w-20 lg:w-[20%] max-w-20">
-                <Image
-                  width={256}
-                  height={256}
-                  src="/sessionb.png"
-                  alt="challenge"
-                  className="group-hover:hidden w-full h-auto"
-                />
-                <Image
-                  width={256}
-                  height={256}
-                  src="/sessiong.png"
-                  alt="challenge"
-                  className="hidden group-hover:block w-full h-auto"
-                />
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="shrink-0 rounded-2xl bg-highlight/10 ring-1 ring-highlight/20 p-2 sm:p-3 md:p-4 lg:p-5">
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/programb.png"
+                    alt="Programs"
+                    className="group-hover:hidden w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/programg.png"
+                    alt="Programs (hover)"
+                    className="hidden group-hover:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-primary text-balance text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight">
+                    Programs
+                  </h3>
+                  <p className="mt-1 font-rajdhani text-secondary text-sm sm:text-base md:text-lg leading-relaxed max-w-[50ch]">
+                    Discover well prepared programs for different goals:
+                    strength, skills, hypertrophy.
+                  </p>
+                </div>
               </div>
-              <h1 className="text-primary text-shadow-xs group-hover:text-action transition-all ease-in-out duration-300 uppercase text-shadow-highlight font-semibold text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl py-0.5 sm:py-1">
-                Sessions
-              </h1>
-              <p className="font-rajdhani text-secondary group-hover:text-action transition-all ease-in-out duration-300 text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl leading-snug xs:leading-relaxed">
-                Build a must have knowledge for Calisthenics with our
-                professional sessions
-              </p>
-            </motion.div>
+            </motion.article>
 
-            <motion.div
-              style={{ opacity: work33, y: y3 }}
-              className="pl-3 xs:pl-4 sm:pl-6 md:pl-10 border-1 border-highlight group cursor-pointer hover:border-action bg-foreground rounded-xl sm:rounded-2xl w-full h-full lg:h-[60%] max-h-140 p-1.5 xs:p-2 sm:p-3 flex flex-col justify-center gap-3  xs:gap-2 sm:gap-3 md:gap-4"
+            {/* Card 2 */}
+            <motion.article
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ amount: 1, once: true }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 22,
+                duration: 2,
+                delay: 0.09,
+              }}
+              className="group relative overflow-hidden rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8 bg-foreground ring-1 ring-highlight/15 hover:ring-action/40 shadow-sm hover:shadow-md transition-all ease-out hover:-translate-y-1 h-full min-h-[220px] lg:min-h-[240px] lg:col-span-6 xl:col-span-3"
+              tabIndex={0}
+              aria-label="Sessions"
             >
-              <div className="h-[15%] xs:h-[18%] sm:h-[16%] md:h-[14%] w-8 xs:w-10 sm:w-16 md:w-20 lg:w-[20%] max-w-20">
-                <Image
-                  width={256}
-                  height={256}
-                  src="/challengesb.png"
-                  alt="challenge"
-                  className="group-hover:hidden w-full h-auto"
-                />
-                <Image
-                  width={256}
-                  height={256}
-                  src="/challengesg.png"
-                  alt="challenge"
-                  className="hidden group-hover:block w-full h-auto"
-                />
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="shrink-0 rounded-2xl bg-highlight/10 ring-1 ring-highlight/20 p-2 sm:p-3 md:p-4 lg:p-5">
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/sessionb.png"
+                    alt="Sessions"
+                    className="group-hover:hidden w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/sessiong.png"
+                    alt="Sessions (hover)"
+                    className="hidden group-hover:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-primary text-balance text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight">
+                    Sessions
+                  </h3>
+                  <p className="mt-1 font-rajdhani text-secondary text-sm sm:text-base md:text-lg leading-relaxed max-w-[50ch]">
+                    Build must-have calisthenics knowledge with our professional
+                    sessions.
+                  </p>
+                </div>
               </div>
-              <h1 className="text-primary text-shadow-xs group-hover:text-action transition-all ease-in-out duration-300 uppercase text-shadow-highlight font-semibold text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl py-0.5 sm:py-1">
-                Challenges
-              </h1>
-              <p className="font-rajdhani text-secondary group-hover:text-action transition-all ease-in-out duration-300 text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl leading-snug xs:leading-relaxed">
-                Train your discipline muscle without realizing with our exciting
-                challenges
-              </p>
-            </motion.div>
+            </motion.article>
 
-            <motion.div
-              style={{ opacity: work44, y: y4 }}
-              className="pl-3 xs:pl-4 sm:pl-6 md:pl-10 border-1 border-highlight group cursor-pointer hover:border-action bg-foreground rounded-xl sm:rounded-2xl w-full h-full lg:h-[60%] max-h-140 p-1.5 xs:p-2 sm:p-3 flex flex-col justify-center gap-3  xs:gap-2 sm:gap-3 md:gap-4"
+            {/* Card 3 */}
+            <motion.article
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ amount: 1, once: true }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 22,
+                duration: 2,
+                delay: 0.14,
+              }}
+              className="group relative overflow-hidden rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8 bg-foreground ring-1 ring-highlight/15 hover:ring-action/40 shadow-sm hover:shadow-md transition-all ease-out hover:-translate-y-1 h-full min-h-[220px] lg:min-h-[240px] lg:col-span-6 xl:col-span-3"
+              tabIndex={0}
+              aria-label="Challenges"
             >
-              <div className="h-[15%] xs:h-[18%] sm:h-[16%] md:h-[17%] w-8 xs:w-10 sm:w-16 md:w-20 lg:w-[20%] max-w-20">
-                <Image
-                  width={256}
-                  height={256}
-                  src="/sessionb.png"
-                  alt="challenge"
-                  className="group-hover:hidden w-full h-auto"
-                />
-                <Image
-                  width={256}
-                  height={256}
-                  src="/sessiong.png"
-                  alt="challenge"
-                  className="hidden group-hover:block w-full h-auto"
-                />
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="shrink-0 rounded-2xl bg-highlight/10 ring-1 ring-highlight/20 p-2 sm:p-3 md:p-4 lg:p-5">
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/challengesb.png"
+                    alt="Challenges"
+                    className="group-hover:hidden w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/challengesg.png"
+                    alt="Challenges (hover)"
+                    className="hidden group-hover:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-primary text-balance text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight">
+                    Challenges
+                  </h3>
+                  <p className="mt-1 font-rajdhani text-secondary text-sm sm:text-base md:text-lg leading-relaxed max-w-[50ch]">
+                    Train your discipline muscle with exciting, time-bound
+                    challenges.
+                  </p>
+                </div>
               </div>
-              <h1 className="text-primary text-shadow-xs group-hover:text-action transition-all ease-in-out duration-300 uppercase text-shadow-highlight font-semibold text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl py-0.5 sm:py-1">
-                Session Creator
-              </h1>
-              <p className="font-rajdhani text-secondary group-hover:text-action transition-all ease-in-out duration-300 text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl leading-snug xs:leading-relaxed">
-                Customize and make training plans based on your goals
-              </p>
-            </motion.div>
+            </motion.article>
+
+            {/* Card 4 */}
+            <motion.article
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ amount: 1, once: true }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 22,
+                duration: 2,
+                delay: 0.19,
+              }}
+              className="group relative overflow-hidden rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8 bg-foreground ring-1 ring-highlight/15 hover:ring-action/40 shadow-sm hover:shadow-md transition-all ease-out hover:-translate-y-1 h-full min-h-[220px] lg:min-h-[240px] lg:col-span-6 xl:col-span-3"
+              tabIndex={0}
+              aria-label="Session Creator"
+            >
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="shrink-0 rounded-2xl bg-highlight/10 ring-1 ring-highlight/20 p-2 sm:p-3 md:p-4 lg:p-5">
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/sessionb.png"
+                    alt="Session Creator"
+                    className="group-hover:hidden w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                  <Image
+                    width={128}
+                    height={128}
+                    src="/sessiong.png"
+                    alt="Session Creator (hover)"
+                    className="hidden group-hover:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                    sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, (max-width: 1024px) 48px, 56px"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-primary text-balance text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight">
+                    Session Creator
+                  </h3>
+                  <p className="mt-1 font-rajdhani text-secondary text-sm sm:text-base md:text-lg leading-relaxed max-w-[50ch]">
+                    Customize and make training plans based on your goals.
+                  </p>
+                </div>
+              </div>
+            </motion.article>
           </div>
         </div>
       </motion.section>

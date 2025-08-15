@@ -29,7 +29,7 @@ const PALETTE = {
 const HIGHLIGHT_GLOW = "rgba(34,211,238,0.55)"; // for neon glows
 
 // Cycle between cyan and near-white for a soft neon pulse
-const GLOW_CYCLE = [PALETTE.highlight, PALETTE.primary];
+const GLOW_CYCLE = [PALETTE.highlight, PALETTE.primary, "#000000"];
 
 function HeadingBlock() {
   const prefersReduced = useReducedMotion();
@@ -69,7 +69,7 @@ function HeadingBlock() {
         animate={prefersReduced ? undefined : { opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: backOut, delay: 0.05 }}
       >
-        Master your body with{" "}
+        Master your body with
         <motion.span
           className="inline-block bg-clip-text text-transparent"
           style={{
@@ -102,7 +102,7 @@ function HeadingBlock() {
       </motion.h1>
 
       <motion.p
-        className="mt-4 md:mt-6 text-center font-rajdhani text-[clamp(1.05rem,2.6vw,1.6rem)] leading-relaxed text-[var(--color-secondary)] max-w-[80ch] md:max-w-[90ch] mx-auto"
+        className="mt-4 md:mt-6 text-center font-rajdhani font-light  text-[clamp(1.05rem,2.6vw,1.6rem)] leading-relaxed text-secondary/80 max-w-[80ch] md:max-w-[90ch] mx-auto"
         initial={prefersReduced ? undefined : { opacity: 0, y: 14 }}
         animate={prefersReduced ? undefined : { opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: backOut, delay: 0.2 }}

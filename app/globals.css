@@ -24,3 +24,6 @@
   color: #000000;
   background: #ffffff;
 }
+html body {
+  scroll-behavior: smooth;
+}
