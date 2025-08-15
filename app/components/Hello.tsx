@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import Link from "next/link";
 import {
   backOut,
   easeInOut,
@@ -9,161 +9,180 @@ import {
   useTransform,
   useMotionTemplate,
   useMotionValue,
+  useReducedMotion,
   animate,
 } from "motion/react";
 import { useRef, useEffect } from "react";
-const COLORS_TOP = ["#ffffff", "#22d3ee", "#0d0d0d"];
 
-export function Hello() {
-  const color = useMotionValue(COLORS_TOP[0]);
+/**
+ * Color system — pulled from your @theme CSS variables
+ */
+const PALETTE = {
+  background: "#000405",
+  foreground: "#010809",
+  primary: "#f4f4f5",
+  secondary: "#a1a1aa",
+  highlight: "#22d3ee", // cyan accent
+};
+
+// Cycle between cyan and near-white only (green removed)
+const GLOW_CYCLE = [PALETTE.highlight, PALETTE.primary];
+
+function HeadingBlock() {
+  const prefersReduced = useReducedMotion();
+  const glow = useMotionValue(GLOW_CYCLE[0]);
 
   useEffect(() => {
-    animate(color, COLORS_TOP, {
+    if (prefersReduced) return;
+    const controls = animate(glow, GLOW_CYCLE, {
       ease: "easeInOut",
       duration: 2,
       repeat: Infinity,
       repeatType: "reverse",
     });
-  }, [color]);
+    return () => controls.stop();
+  }, [glow, prefersReduced]);
 
-  const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
+  const cardShadow = useMotionTemplate`0 0 0 1px rgba(255,255,255,0.06), 0 10px 40px ${glow}`;
+  const accentGradient = useMotionTemplate`linear-gradient(90deg, ${PALETTE.highlight}, ${PALETTE.primary}, ${PALETTE.highlight})`;
 
   return (
-    <>
-      <motion.section
-        style={{ boxShadow }}
-        className="w-full p-[2em]  flex flex-col items-center justify-center bg-foreground shadow-xl/10 shadow-white  rounded-4xl"
+    <motion.section
+      aria-labelledby="hero-title"
+      style={{ boxShadow: cardShadow }}
+      className="w-full max-w-[1200px] p-7 md:p-10 rounded-3xl border border-white/10 bg-[var(--color-foreground)]/90 backdrop-blur-md"
+    >
+      <h1
+        id="hero-title"
+        className="font-Clash tracking-tight text-center text-[clamp(2.25rem,6vw,5rem)] leading-[1.05] text-[var(--color-primary)]"
       >
-        <h1 className="text-xl  md:text-4xl xl:text-[6xl] m-3 md:m-4 xl:m-6  text-center text-primary text-nowrap text-shadow-md/25 text-shadow-primary font-Clash font-[500] tracking-tight  ">
-          Master your body with{" "}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0, 0.5, 1],
-            }}
-            transition={{
-              times: [0, 0.5, 1],
-              duration: 2,
-              delay: 1,
-              ease: [backOut, easeInOut],
-            }}
-          >
-            Calithenics
-          </motion.span>
-        </h1>
+        Master your body with{" "}
+        <motion.span
+          className="inline-block bg-clip-text text-transparent"
+          style={{
+            backgroundImage: accentGradient,
+            backgroundSize: "200% 200%",
+          }}
+          initial={{ backgroundPositionX: "0%" }}
+          animate={
+            prefersReduced ? undefined : { backgroundPositionX: ["0%", "100%"] }
+          }
+          transition={
+            prefersReduced
+              ? undefined
+              : {
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut",
+                }
+          }
+        >
+          Calisthenics
+        </motion.span>
+      </h1>
 
-        <p className="text-md font-light md:text-xl xl:text-[3xl] text-highlight text-shadow-md/20  font-rajdhani text-shadow-primary max-w-300  text-center">
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0, 0.5, 1],
-            }}
-            transition={{
-              times: [0, 0.5, 1],
-              duration: 2,
-              delay: 1,
-              ease: [backOut, easeInOut],
-            }}
+      <p className="mt-4 md:mt-6 text-center font-rajdhani text-[clamp(1.05rem,2.6vw,1.6rem)] leading-relaxed text-[var(--color-secondary)] max-w-[80ch] md:max-w-[90ch] mx-auto">
+        Workouts for all levels and goals. Build muscle, gain strength, and
+        become who you want to be.
+      </p>
+
+      <div className="mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-4">
+        <Link
+          href="#get-started"
+          className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 text-[var(--color-foreground)] font-outfit font-medium bg-[var(--color-highlight)] hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-highlight)]"
+        >
+          Get started
+          <svg
+            className="size-4 transition-transform group-hover:translate-x-0.5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
           >
-            Calisthenics{" "}
-          </motion.span>{" "}
-          workouts for all levels and goals. Gain muscle, get stronger and
-          become who you want to be
-        </p>
-      </motion.section>
-    </>
+            <path d="M7 4l6 6-6 6" />
+          </svg>
+        </Link>
+        <Link
+          href="#programs"
+          className="inline-flex items-center gap-2 rounded-xl px-5 py-3 font-outfit font-medium text-[var(--color-primary)] border border-white/15 hover:border-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-highlight)]"
+        >
+          Browse programs
+        </Link>
+      </div>
+
+      {/* Thin accent rule (green removed) */}
+      <div className="mt-8 h-px w-full bg-gradient-to-r from-[rgba(34,211,238,0.35)] via-transparent to-[rgba(34,211,238,0.35)]" />
+
+      {/* Trust strip */}
+      <ul className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-xs md:text-sm text-[var(--color-secondary)]">
+        <li className="rounded-xl border border-white/10 px-3 py-2">
+          No equipment required
+        </li>
+        <li className="rounded-xl border border-white/10 px-3 py-2">
+          Beginner → Advanced plans
+        </li>
+        <li className="rounded-xl border border-white/10 px-3 py-2">
+          Video form cues
+        </li>
+        <li className="rounded-xl border border-white/10 px-3 py-2">
+          Progress tracking
+        </li>
+      </ul>
+    </motion.section>
   );
 }
+
 export default function Hero() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const prefersReduced = useReducedMotion();
+
+  // Parallax on scroll
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["end start", "start start"],
   });
+  useMotionValueEvent(scrollYProgress, "change", () => {});
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    console.log("Scroll progress:", latest);
-  });
+  const opacity = useTransform(scrollYProgress, [1, 0.85], [1, 0]);
+  const y = useTransform(scrollYProgress, [1, 0.85], [0, -120]);
+  const opacityBkg = useTransform(scrollYProgress, [1, 0.5], [1, 0]);
 
-  const opacity = useTransform(scrollYProgress, [1, 0.8], [1, 0]);
-  const y = useTransform(scrollYProgress, [1, 0.8], [0, -200]);
-  const opacity2 = useTransform(scrollYProgress, [1, 0.4], [1, 0]);
-  /*       */
+  // Animated background glow (green removed)
+  const glow = useMotionValue(GLOW_CYCLE[0]);
 
-  const color = useMotionValue(COLORS_TOP[0]);
-  const imageOp = useMotionValue(0);
   useEffect(() => {
-    animate(imageOp, [1, 1, 0.7], {
+    if (prefersReduced) return;
+    const a2 = animate(glow, GLOW_CYCLE, {
       ease: "easeInOut",
       duration: 2,
       repeat: Infinity,
       repeatType: "reverse",
     });
-    animate(color, COLORS_TOP, {
-      ease: "easeInOut",
-      duration: 2,
-      repeat: Infinity,
-      repeatType: "reverse",
-    });
-  }, [color, imageOp]);
+    return () => {
+      a2.stop();
+    };
+  }, [glow, prefersReduced]);
 
-  const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
+  const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, ${PALETTE.background} 0%, ${PALETTE.foreground} 45%, ${glow} 100%)`;
 
   return (
-    <>
+    <div className="relative w-full min-h-[100svh] overflow-hidden" ref={ref}>
+      {/* Animated background */}
       <motion.div
-        style={{
-          backgroundImage,
-          opacity: opacity2,
-        }}
-        className="fixed inset-0 -z-10 "
+        aria-hidden
+        style={{ backgroundImage, opacity: opacityBkg }}
+        className="fixed inset-0 -z-10"
       />
-      <div
-        ref={ref}
-        className=" w-full h-[100vh] flex flex-col justify-start items-center pt-[2rem] "
+
+      {/* Content only */}
+      <motion.div
+        style={prefersReduced ? undefined : { opacity, y }}
+        className="mx-auto flex min-h-[100svh] w-full max-w-[1600px] items-center justify-center px-4 md:px-8"
       >
-        <motion.div
-          style={{ opacity: opacity, y: y }}
-          className="h-screen w-full max-w-[1600px] p-3 flex flex-col  justify-center items-center gap-10"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 110 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ease: backOut, duration: 2, delay: 1 }}
-            className="w-full h-fit  lg:px-6 max-w-[1200px]  "
-          >
-            <Hello />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 110 }}
-            animate={{
-              opacity: [0, 0.5, 1],
-              y: 0,
-            }}
-            transition={{
-              ease: backOut,
-              duration: 2,
-              delay: 1,
-              opacity: {
-                times: [0, 0.5, 1],
-                duration: 2,
-                delay: 1,
-                ease: [backOut, easeInOut],
-              },
-            }}
-            className="relative w-full h-[30%]"
-          >
-            <motion.div style={{ opacity: imageOp }}>
-              <Image
-                src="/dark-nb.svg"
-                alt="Background"
-                fill
-                className="sticky top-10 object-contain max-h-160"
-              />
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </div>
-    </>
+        <div className="w-full px-2 md:px-6 flex items-center justify-center">
+          <HeadingBlock />
+        </div>
+      </motion.div>
+    </div>
   );
 }
