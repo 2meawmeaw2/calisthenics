@@ -159,6 +159,7 @@ function GlowCard({
 export function Animated() {
   return (
     <section
+      id="community"
       aria-labelledby="community-title"
       className="relative min-h-screen w-full overflow-hidden"
     >

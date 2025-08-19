@@ -2,65 +2,32 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
+const CTA_ID = "cta";
 
-const navVariants = {
-  hidden: { opacity: 0, y: 110 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-      damping: 22,
-      duration: 0.8,
-      delay: 0.2,
-    },
-  },
-};
-
-// Configure your 7 communities (ids must match section ids on the page)
 const SECTIONS = [
   { id: "hero", label: "Hero" },
-  { id: "programs", label: "Features" },
-  { id: "programs", label: "Community" },
-  { id: "programs", label: "Pricing" },
-] as const;
+  { id: "features", label: "Features" },
+  { id: "community", label: "Community" },
+  { id: "pricing", label: "Pricing" },
+  { id: "faq", label: "F&Q" },
+];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const navWrapRef = useRef<HTMLDivElement | null>(null);
-  const [navHeight, setNavHeight] = useState<number>(76);
 
-  // measure sticky header height for offset
-  useEffect(() => {
-    const measure = () => {
-      const h = navWrapRef.current?.offsetHeight ?? 76;
-      setNavHeight(h);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (navWrapRef.current) ro.observe(navWrapRef.current);
-    window.addEventListener("resize", measure, { passive: true });
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-
-  // sticky state
+  // add subtle shadow/opacity once the user scrolls a bit
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
+    onScroll(); // set initial state on mount
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // lock body scroll when mobile menu open
+  // lock body scroll while mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -68,70 +35,29 @@ export default function Header() {
     };
   }, [open]);
 
-  // Smooth scroll to a section with header offset
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - (navHeight + 8);
-    window.scrollTo({ top: y, behavior: "smooth" });
-    history.replaceState(null, "", `#${id}`);
+  // 1) Make goTo handle "top"
+  const goTo = (id: string) => {
     setOpen(false);
+
+    if (!id || id === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (history.pushState) {
+        history.pushState(
+          null,
+          "",
+          window.location.pathname + window.location.search
+        ); // clear hash
+      }
+      return;
+    }
+
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (history.pushState) history.pushState(null, "", `#${id}`);
   };
 
-  // Observe sections to update activeId
-  useEffect(() => {
-    const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      Boolean
-    ) as HTMLElement[];
-    if (!targets.length) return;
-
-    let ticking = false;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // pick the most visible intersecting section
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0)
-          );
-        if (visible[0]) {
-          const id = visible[0].target.id;
-          if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(() => {
-              setActiveId(id);
-              ticking = false;
-            });
-          }
-        }
-      },
-      {
-        // top margin accounts for sticky header
-        root: null,
-        rootMargin: `-${navHeight + 12}px 0px -50% 0px`,
-        threshold: [0.25, 0.5, 0.75, 1],
-      }
-    );
-
-    targets.forEach((t) => observer.observe(t));
-    return () => observer.disconnect();
-  }, [navHeight]);
-
-  // Open the section in URL hash on load
-  useEffect(() => {
-    const hash = decodeURIComponent(window.location.hash.replace("#", ""));
-    if (hash) {
-      // small delay so navHeight is measured
-      setTimeout(() => scrollTo(hash), 60);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const desktopLinks = useMemo(() => SECTIONS, []);
-  const mobileLinks = useMemo(() => SECTIONS, []);
-
   return (
-    <>
+    <header className="sticky top-0 z-[100]">
       {/* Skip link */}
       <a
         href="#main"
@@ -140,30 +66,24 @@ export default function Header() {
         Skip to content
       </a>
 
-      <motion.nav
-        initial="hidden"
-        animate="show"
-        variants={navVariants}
+      <nav
         aria-label="Primary"
         className={[
-          "sticky top-0 z-[100] w-full",
-          "backdrop-blur-md transition-all",
-          "border-b",
+          "w-full border-b backdrop-blur transition-all",
           scrolled
-            ? "bg-foreground/70 border-highlight/20"
+            ? "bg-foreground/80 border-highlight/20 shadow-sm"
             : "bg-foreground/40 border-highlight/10",
         ].join(" ")}
-        ref={navWrapRef}
       >
         <div className="mx-auto max-w-screen-2xl px-[5%] md:px-[6%] lg:px-[8%] h-[4.25rem] md:h-[4.75rem] flex items-center justify-between">
           {/* Logo */}
           <button
             type="button"
-            onClick={() => scrollTo(SECTIONS[0].id)}
+            onClick={() => goTo("top")}
             aria-label="Go to top"
             className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action rounded-lg"
           >
-            <div className="relative h-9 w-9 md:h-11 md:w-11">
+            <span className="relative h-9 w-9 md:h-11 md:w-11">
               <Image
                 src="/dark-nb.svg"
                 alt="Brand logo"
@@ -171,55 +91,46 @@ export default function Header() {
                 className="object-contain"
                 priority
               />
-            </div>
+            </span>
             <span className="hidden sm:block font-Clash text-primary text-lg md:text-xl tracking-tight">
               Steady Core
             </span>
           </button>
 
-          {/* Desktop nav (sections) */}
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-2 lg:gap-3">
             <ul className="flex items-center gap-1 lg:gap-2">
-              {desktopLinks.map((l) => {
-                const active = activeId === l.id;
-                return (
-                  <li key={l.id} className="relative">
-                    <button
-                      type="button"
-                      onClick={() => scrollTo(l.id)}
-                      aria-current={active ? "location" : undefined}
-                      className={[
-                        "px-3 py-2 lg:px-4 lg:py-2 rounded-xl text-sm md:text-[0.95rem] font-medium",
-                        "text-primary hover:bg-highlight/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action",
-                        "transition-colors motion-reduce:transition-none relative",
-                      ].join(" ")}
-                    >
-                      <span className="relative z-10">{l.label}</span>
-                      {active && (
-                        <motion.span
-                          layoutId="nav-pill"
-                          className="absolute inset-0 rounded-xl bg-highlight/20 ring-1 ring-highlight/30"
-                          transition={{
-                            type: "spring",
-                            stiffness: 500,
-                            damping: 40,
-                          }}
-                          aria-hidden="true"
-                        />
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
+              {SECTIONS.map((l, i) => (
+                <li key={l.id}>
+                  <a
+                    href={i === 0 ? "#" : `#${l.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (i === 0) {
+                        goTo("top");
+                      } else {
+                        goTo(l.id);
+                      }
+                    }}
+                    className="group relative px-3 py-2 lg:px-4 lg:py-2 rounded-xl text-sm md:text-[0.95rem] font-medium text-primary hover:bg-highlight/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action transition-colors"
+                  >
+                    <span>{l.label}</span>
+                    <span className="pointer-events-none absolute left-3 right-3 -bottom-0.5 h-px scale-x-0 group-hover:scale-x-100 transition-transform origin-left bg-highlight/60" />
+                  </a>
+                </li>
+              ))}
             </ul>
 
-            <button
-              type="button"
-              onClick={() => scrollTo(SECTIONS[0].id)}
+            <a
+              href={`#${CTA_ID}`}
+              onClick={(e) => {
+                e.preventDefault();
+                goTo(CTA_ID);
+              }}
               className="ml-2 px-4 py-2 rounded-xl bg-action text-black font-black hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
             >
               Get Started
-            </button>
+            </a>
           </div>
 
           {/* Mobile: burger */}
@@ -239,56 +150,32 @@ export default function Header() {
         </div>
 
         {/* Mobile menu */}
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              key="mobile-menu"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{
-                height: { duration: 0.25 },
-                opacity: { duration: 0.2 },
-              }}
-              className="md:hidden overflow-hidden border-t border-highlight/10 bg-foreground/80 backdrop-blur-md"
-            >
-              <div className="px-[5%] pb-4 pt-2">
-                <ul className="flex flex-col gap-1">
-                  {mobileLinks.map((l) => {
-                    const active = activeId === l.id;
-                    return (
-                      <li key={l.id}>
-                        <button
-                          type="button"
-                          onClick={() => scrollTo(l.id)}
-                          className={[
-                            "block w-full text-left px-3 py-3 rounded-lg text-primary",
-                            "hover:bg-highlight/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action",
-                            active
-                              ? "bg-highlight/15 ring-1 ring-highlight/25"
-                              : "ring-1 ring-transparent",
-                          ].join(" ")}
-                          aria-current={active ? "location" : undefined}
-                        >
-                          {l.label}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                <button
-                  type="button"
-                  onClick={() => scrollTo(SECTIONS[0].id)}
-                  className="mt-3 inline-flex w-full items-center justify-center px-4 py-3 rounded-lg bg-action text-black font-black hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
-                >
-                  Get Started
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-    </>
+        {open && (
+          <div className="md:hidden border-t border-highlight/10 bg-foreground/80 backdrop-blur">
+            <ul className="px-[5%] py-2 flex flex-col gap-1">
+              {SECTIONS.map((l, i) => (
+                <li key={l.id}>
+                  <a
+                    href={i === 0 ? "#" : `#${l.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (i === 0) {
+                        goTo("top");
+                      } else {
+                        goTo(l.id);
+                      }
+                    }}
+                    className="block w-full px-3 py-3 rounded-lg text-primary ring-1 ring-transparent hover:bg-highlight/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action transition"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+              {/* ... */}
+            </ul>
+          </div>
+        )}
+      </nav>
+    </header>
   );
 }

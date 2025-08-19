@@ -71,13 +71,13 @@ export default function CTA() {
           </p>
 
           {/* Benefit bullets */}
-          <ul className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-left max-w-4xl mx-auto">
+          <ul className="mt-5 grid place-items-center grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-left max-w-4xl mx-auto">
             {[
               "No equipment required to start",
               "Science-backed progressions",
               "Cancel anytime—no hassle",
             ].map((b) => (
-              <li key={b} className="flex items-start gap-2 sm:gap-3">
+              <li key={b} className="flex items-start  gap-2 sm:gap-3">
                 <FiCheck aria-hidden className="mt-0.5 text-action shrink-0" />
                 <span className="text-primary text-sm sm:text-base">{b}</span>
               </li>

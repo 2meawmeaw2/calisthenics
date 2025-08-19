@@ -6,7 +6,7 @@ export default function Intro() {
   return (
     <>
       <motion.section
-        id="programs"
+        id="features"
         aria-labelledby="programs-title"
         // More breathing room on desktop
         className="w-full py-10 sm:py-14 lg:py-20 mb-16 sm:mb-24 lg:mb-32 relative"
