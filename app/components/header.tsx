@@ -127,7 +127,7 @@ export default function Header() {
                 e.preventDefault();
                 goTo(CTA_ID);
               }}
-              className="ml-2 px-4 py-2 rounded-xl bg-action text-black font-black hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
+              className="ml-2 px-4 py-2 rounded-xl bg-action text-white font-black hover:bg-highlight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action"
             >
               Get Started
             </a>
